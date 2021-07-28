@@ -1,0 +1,230 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Atlas Documentation",
+    "description": "This is a documentation about Atlas API",
+    "version": "1.0.0",
+    "contact": {
+      "email": "deywerson.pereira@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "users",
+      "description": "Users Management"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create a user",
+        "description": "Create a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "Username Example",
+                  "email": "email@usernameexample.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/Users"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Email has already been used!"
+        }
+      },
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Return all users",
+        "description": "Only `admins` can use this resource",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schema/Users"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User is not admin!"
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get an specified user",
+        "description": "Get an specified user's information",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "type": "string",
+            "format": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/Users"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Turn user on user admin",
+        "description": "Turn a simple user on user admin",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "admin": {
+                      "type": "boolean"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "date",
+                      "example": "2021-01-01"
+                    },
+                    "updated_at": {
+                      "type": "date",
+                      "example": "2021-01-01"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schema": {
+      "Users": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "admin": {
+            "type": "boolean",
+            "example": false
+          },
+          "email": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "date",
+            "example": "2021-01-01"
+          },
+          "updated_at": {
+            "type": "date",
+            "example": "2021-01-01"
+          }
+        }
+      }
+    }
+  }
+}
